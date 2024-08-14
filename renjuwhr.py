@@ -67,27 +67,23 @@ st.write(LANGUAGES[lang_code]['description'])
 
 st.sidebar.header(LANGUAGES[lang_code]['filters'])
 
-# Country filter
 country_filter = st.sidebar.multiselect(
     LANGUAGES[lang_code]['country'],
     options=data['Country'].unique(),
     default=[]
 )
 
-# Filter cities based on selected countries
 if country_filter:
     city_options = data[data['Country'].isin(country_filter)]['City'].unique()
 else:
     city_options = data['City'].unique()
 
-# City filter
 city_filter = st.sidebar.multiselect(
     LANGUAGES[lang_code]['city'],
     options=city_options,
     default=[]
 )
 
-# Rating range filter
 rating_filter = st.sidebar.slider(
     LANGUAGES[lang_code]['rating_range'],
     min_value=int(data['Rating'].min()),
@@ -95,10 +91,8 @@ rating_filter = st.sidebar.slider(
     value=(int(data['Rating'].min()), int(data['Rating'].max()))
 )
 
-# Search bar for player names
 search_name = st.sidebar.text_input(LANGUAGES[lang_code]['search_name'])
 
-# Apply filters to the data
 filtered_data = data[
     (data['Country'].isin(country_filter) | (country_filter == [])) &
     (data['City'].isin(city_filter) | (city_filter == [])) &
@@ -106,7 +100,6 @@ filtered_data = data[
     (data['Rating'] <= rating_filter[1])
 ]
 
-# Search player by name
 if search_name:
     filtered_data = filtered_data[
         filtered_data['Name'].str.contains(search_name, case=False)
@@ -121,11 +114,8 @@ filtered_data_display = filtered_data_display.rename(columns={
     'Rating': LANGUAGES[lang_code]['player_rating']
 })
 
-# Display the dataframe with Streamlit, hiding the index
 st.dataframe(filtered_data_display, hide_index=True)
 
-
-# Download Filtered Data
 csv = filtered_data_display.to_csv(index=False)
 st.download_button(
     label=LANGUAGES[lang_code]['download_csv'],
@@ -134,7 +124,6 @@ st.download_button(
     mime='text/csv',
 )
 
-# Plot the distribution of player ratings using Plotly
 st.subheader(LANGUAGES[lang_code]['distribution'])
 rating_histogram = px.histogram(filtered_data, x='Rating', nbins=20, title=LANGUAGES[lang_code]['distribution'])
 rating_histogram.update_traces(
@@ -151,14 +140,11 @@ rating_histogram.update_layout(
 )
 st.plotly_chart(rating_histogram)
 
-# Top N players
 top_n = st.sidebar.slider(LANGUAGES[lang_code]['top_n_players'].format('N'), min_value=1, max_value=20, value=10)
 st.subheader(LANGUAGES[lang_code]['top_n_players'].format(top_n))
 
-# Get top N players based on 'Rating'
 top_players = filtered_data.nlargest(top_n, 'Rating')
 
-# Drop unwanted columns and rename the remaining columns
 top_players_display = top_players.drop(columns=['latitude', 'longitude']).rename(columns={
     'Rank': LANGUAGES[lang_code]['rank'],  # No need to change 'Rank' if the name stays the same
     'Name': LANGUAGES[lang_code]['player_name'],
@@ -167,40 +153,31 @@ top_players_display = top_players.drop(columns=['latitude', 'longitude']).rename
     'Rating': LANGUAGES[lang_code]['player_rating']
 })
 
-# Display the top N players dataframe with the index hidden
 st.dataframe(top_players_display, hide_index=True)
 
-# Country-wise statistics
 st.subheader(LANGUAGES[lang_code]['country_stats'])
 
 if country_filter:
-    # Group the data by country and calculate average rating and player count
     country_stats = filtered_data.groupby('Country').agg(
         average_rating=pd.NamedAgg(column='Rating', aggfunc='mean'),
         player_count=pd.NamedAgg(column='Rating', aggfunc='count')
     ).reset_index()
     
-    # Rename the columns based on the selected language
     country_stats = country_stats.rename(columns={
         'Country': LANGUAGES[lang_code]['player_country'],
         'average_rating': LANGUAGES[lang_code]['average_rating'],
         'player_count': LANGUAGES[lang_code]['player_count']
     })
     
-    # Display the country statistics with the index hidden
     st.dataframe(country_stats, hide_index=True)
 
-# Player details
 st.subheader(LANGUAGES[lang_code]['player_details'])
 
-# Select a player from the dropdown
 selected_player = st.selectbox(LANGUAGES[lang_code]['player_details'], filtered_data['Name'])
 
 if selected_player:
-    # Filter the details of the selected player
     player_details = filtered_data[filtered_data['Name'] == selected_player].iloc[0]
     
-    # Drop unwanted columns and rename the remaining ones
     player_details_display = player_details.drop(labels=['latitude', 'longitude']).rename(pd.Series({
         'Rank': LANGUAGES[lang_code]['rank'],
         'Name': LANGUAGES[lang_code]['player_name'],
@@ -209,23 +186,17 @@ if selected_player:
         'Rating': LANGUAGES[lang_code]['player_rating']
     }))
     
-    # Convert the Series to a DataFrame to use the hide_index option
     player_details_df = player_details_display.to_frame().T
     
-    # Display the player's details with the index hidden
     st.dataframe(player_details_df, hide_index=True)
 
-# Compare Players
 st.subheader(LANGUAGES[lang_code]['compare_players'])
 
-# Select players to compare
 compare_players = st.multiselect(LANGUAGES[lang_code]['compare_players'], filtered_data['Name'])
 
 if len(compare_players) == 2:
-    # Filter the data for the selected players
     compare_data = filtered_data[filtered_data['Name'].isin(compare_players)]
     
-    # Drop unwanted columns and rename the remaining ones
     compare_data_display = compare_data.drop(columns=['latitude', 'longitude']).rename(columns={
         'Rank': LANGUAGES[lang_code]['rank'],
         'Name': LANGUAGES[lang_code]['player_name'],
@@ -264,7 +235,6 @@ if 'latitude' in data.columns and 'longitude' in data.columns:
     map_fig.update_layout(mapbox_style="open-street-map")
     st.plotly_chart(map_fig)
 
-    # Add this to the end of your Streamlit app code
 st.markdown("---")
 if lang_code == 'en':
     st.markdown("""
