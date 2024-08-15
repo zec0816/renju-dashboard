@@ -6,4 +6,4 @@ This is a dashboard that allows you to explore the distribution of player rating
 ![image](https://github.com/user-attachments/assets/39fa9b65-4502-4199-bec2-f91fbe24715f)
 
 # Disclaimer
-The rating database is sourced from renju.net (https://www.renju.net/)
+Currently, the dashboard includes only active players. Future updates may include inactive players, filters by gender, and potentially Gomoku ratings. The rating database is sourced from renju.net.
