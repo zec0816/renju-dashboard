@@ -4,6 +4,8 @@ import plotly.express as px
 import plotly.graph_objects as go
 import altair as alt
 
+st.set_page_config(page_title='RenjuRating', page_icon = 'icon.png', layout = 'wide', initial_sidebar_state = 'auto')
+
 data = pd.read_excel('players_with_coordinates.xlsx', sheet_name='players')
 
 LANGUAGES = {
