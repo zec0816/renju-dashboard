@@ -1,7 +1,7 @@
 
 [theme]
 primaryColor = "#FF6F61"
-backgroundColor = "#121212"  # Darker background color for dark mode
-secondaryBackgroundColor = "#1F1F1F"  # Slightly lighter background for secondary elements in dark mode
-textColor = "#E0E0E0"  # Light color for text to stand out against dark background
+backgroundColor = "#121212" 
+secondaryBackgroundColor = "#1F1F1F" 
+textColor = "#E0E0E0" 
 font = "sans-serif"
