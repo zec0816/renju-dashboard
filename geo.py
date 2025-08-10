@@ -2,7 +2,7 @@ import pandas as pd
 from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 
-data = pd.read_excel('players.xlsx', sheet_name='players')
+data = pd.read_excel('players_20250803.xlsx', sheet_name='players_20250803')
 
 geolocator = Nominatim(user_agent="geoapiExercises")
 geocode = RateLimiter(geolocator.geocode, min_delay_seconds=1)
@@ -19,7 +19,7 @@ def get_coordinates(city, country):
 
 data[['latitude', 'longitude']] = data.apply(lambda row: pd.Series(get_coordinates(row['City'], row['Country'])), axis=1)
 
-data.to_excel('players_with_coordinates.xlsx', sheet_name='players.csv', index=False)
+data.to_excel('players_with_coordinates_20250803.xlsx', sheet_name='players_20250803.csv', index=False)
 
 """
 If still not complete due to GeoAPI limitation, run this again:
