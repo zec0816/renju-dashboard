@@ -3,7 +3,7 @@ from geopy.geocoders import Nominatim
 from geopy.extra.rate_limiter import RateLimiter
 
 # Read Excel
-data = pd.read_excel('players_20250803.xlsx', sheet_name='players_20250803')
+data = pd.read_excel('players_20250803.xlsx', sheet_name='Sheet1')
 
 # Use a unique user_agent with contact info
 geolocator = Nominatim(user_agent="renju_rating_geocoder (trash5896@gmail.com)")
@@ -35,4 +35,4 @@ data[['latitude', 'longitude']] = data.apply(
 )
 
 # Save result
-data.to_excel('players_with_coordinates_20250803.xlsx', sheet_name='players_20250803', index=False)
+data.to_excel('players_with_coordinates_20250803.xlsx', sheet_name='Sheet1', index=False)
